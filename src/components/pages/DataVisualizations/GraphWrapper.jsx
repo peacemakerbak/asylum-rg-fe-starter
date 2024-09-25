@@ -65,27 +65,21 @@ function GraphWrapper(props) {
     try {
       let citizenshipData, fiscalData;
 
-      // Fetch data based on office parameter
-      if (office === 'all' || !office) {
-        citizenshipData = await axios.get(citizenshipApi, {
-          params: { from: years[0], to: years[1] },
-        });
-        fiscalData = await axios.get(fiscalSummaryAPI, {
-          params: { from: years[0], to: years[1] },
-        });
-      } else {
-        citizenshipData = await axios.get(citizenshipApi, {
-          params: { from: years[0], to: years[1], office },
-        });
-        fiscalData = await axios.get(fiscalSummaryAPI, {
-          params: { from: years[0], to: years[1], office },
-        });
-      }
+      // Parallel Data Fetching
+      const citizenshipPromise = axios.get(citizenshipApi, {
+        params: { from: years[0], to: years[1], office: office === 'all' ? undefined : office },
+      });
+      const fiscalPromise = axios.get(fiscalSummaryAPI, {
+        params: { from: years[0], to: years[1], office: office === 'all' ? undefined : office },
+      });
 
-      // Combine citizenship data into fiscal data
+      [citizenshipData, fiscalData] = await Promise.all([citizenshipPromise, fiscalPromise]);
+
+      // Data Combination
       fiscalData.data["citizenshipResults"] = citizenshipData.data;
       stateSettingCallback(view, office, [fiscalData.data]); // Update state with combined data
     } catch (error) {
+      // Error Handling
       console.error('Error fetching data:', error); // Log any errors
     }
   }
