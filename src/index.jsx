@@ -1,9 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { Auth0Provider } from "@auth0/auth0-react"; // Added import for Auth0Provider
 import {
   BrowserRouter as Router,
   Route,
-  // useHistory,
   Switch,
 } from 'react-router-dom';
 
@@ -29,13 +29,21 @@ const store = configureStore({ reducer: reducer });
 ReactDOM.render(
   <Router>
     <Provider store={store}>
-      <React.StrictMode>
-        <App />
-      </React.StrictMode>
+      <Auth0Provider // Wrapped App with Auth0Provider for authentication context
+        domain={process.env.REACT_APP_AUTH0_DOMAIN}
+        clientId={process.env.REACT_APP_AUTH0_CLIENT_ID}
+        redirectUri={window.location.origin}
+      >
+        <React.StrictMode>
+          <App />
+        </React.StrictMode>
+      </Auth0Provider>
     </Provider>
   </Router>,
   document.getElementById('root')
 );
+
+// The Auth0Provider enables the use of authentication features throughout the app.
 
 export function App() {
   const { Footer, Header } = Layout;
