@@ -22,24 +22,23 @@ import { Provider } from 'react-redux';
 import { configureStore } from '@reduxjs/toolkit';
 import reducer from './state/reducers';
 import { colors } from './styles/data_vis_colors';
+// import { Auth0Provider } from '@auth0/auth0-react';
+import Auth0ProviderWithHistory from './auth0-provider-with-history';
+import ProfilePage from './components/pages/Landing/ProfilePage'; 
 
 const { primary_accent_color } = colors;
 
 const store = configureStore({ reducer: reducer });
+console.log('Auth0 Domain:', process.env.REACT_APP_AUTH0_DOMAIN); // Log Auth0 Domain
+console.log('Auth0 Client ID:', process.env.REACT_APP_AUTH0_CLIENT_ID); // Log Auth0 Client ID
 ReactDOM.render(
-  <Router>
-    <Provider store={store}>
-      <Auth0Provider // Wrapped App with Auth0Provider for authentication context
-        domain={process.env.REACT_APP_AUTH0_DOMAIN}
-        clientId={process.env.REACT_APP_AUTH0_CLIENT_ID}
-        redirectUri={window.location.origin}
-      >
-        <React.StrictMode>
-          <App />
-        </React.StrictMode>
-      </Auth0Provider>
-    </Provider>
-  </Router>,
+  <Provider store={store}>
+    <Router>
+      <Auth0ProviderWithHistory>
+        <App />
+      </Auth0ProviderWithHistory>
+    </Router>
+  </Provider>,
   document.getElementById('root')
 );
 
