@@ -10,7 +10,7 @@ import LogoutButton from '../../logout-button'; // Added LogoutButton import
 const { primary_accent_color } = colors;
 
 function HeaderContent() {
-  const { isAuthenticated } = useAuth0(); // Removed loginWithRedirect and logout
+  const { isAuthenticated } = useAuth0();
   console.log(isAuthenticated); // Added console log for isAuthenticated
 
   return (
