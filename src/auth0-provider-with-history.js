@@ -25,4 +25,4 @@ const Auth0ProviderWithHistory = ({ children }) => {
   );
 };
 
-export default Auth0ProviderWithHistory; // Export the component for use in the application
+export default Auth0ProviderWithHistory; 
